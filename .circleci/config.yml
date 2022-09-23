@@ -104,23 +104,23 @@ jobs:
   #           ansible-playbook -i inventory.txt main-remote.yml
 
   # # # * Exercise: Smoke Testing
-  smoke_test:
-    docker:
-      - image: alpine:latest
-    steps:
-      - run: apk add --update curl
-      - run:
-          name: smoke test
-          command: |
-            URL="http://54.225.39.251:30/"
-            # # * Test if website exists
-            if curl -s --head ${URL} 
-            then
-              return 0
-            else
-              return 1
-            fi
-      # - destroy_environment      
+  # smoke_test:
+  #   docker:
+  #     - image: alpine:latest
+  #   steps:
+  #     - run: apk add --update curl
+  #     - run:
+  #         name: smoke test
+  #         command: |
+  #           URL="http://54.225.39.251:30/"
+  #           # # * Test if website exists
+  #           if curl -s --head ${URL} 
+  #           then
+  #             return 0
+  #           else
+  #             return 1
+  #           fi
+  #     # - destroy_environment      
   
   # # # * Exercise: Promote to Production - Job 1 
   # # # * Prerequisite: 
@@ -138,20 +138,20 @@ jobs:
   # # # * Job 1
   # # # * Executes the bucket.yml - Deploy an S3 bucket, and interface with that bucket to synchronize the files between local and the bucket.
   # # # * Note that the `--parameter-overrides` let you specify a value that override parameter value in the bucket.yml template file.
-  # create_and_deploy_front_end:
-  #   docker:
-  #     - image: amazon/aws-cli
-  #   steps:
-  #     - checkout
-  #     - run:
-  #         name: Execute bucket.yml - Create Cloudformation Stack
-  #         command: |
-  #           aws cloudformation deploy \
-  #           --template-file bucket.yml \
-  #           --stack-name stack-create-bucket-${CIRCLE_WORKFLOW_ID:0:7} \
-  #           --parameter-overrides MyBucketName="mybucket-${CIRCLE_WORKFLOW_ID:0:7}"
+  create_and_deploy_front_end:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Execute bucket.yml - Create Cloudformation Stack
+          command: |
+            aws cloudformation deploy \
+            --template-file bucket.yml \
+            --stack-name stack-create-bucket-${CIRCLE_WORKFLOW_ID:0:7} \
+            --parameter-overrides MyBucketName="mybucket-${CIRCLE_WORKFLOW_ID:0:7}"
   #     # # * Uncomment the step below if yoou wish to upload all contents of the current directory to the new S3 bucket
-  #     - run: aws s3 sync . s3://mybucket-${CIRCLE_WORKFLOW_ID:0:7} --delete
+      - run: aws s3 sync . s3://mybucket-${CIRCLE_WORKFLOW_ID:0:7} --delete
   
   # # # * Exercise: Promote to Production - Job 2
   # # # * Fetch and save the pipeline ID (bucket ID) responsible for the last release.
@@ -224,8 +224,8 @@ workflows:
       # # *      - upload_file
       # - create_infrastructure
       # - configure_infrastructure
-      - smoke_test
-      # - create_and_deploy_front_end
+      # - smoke_test
+      - create_and_deploy_front_end
       # - promote_to_production:
       #     requires: 
       #       - create_and_deploy_front_end
