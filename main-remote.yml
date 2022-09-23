@@ -1,0 +1,10 @@
+---
+# RExercise to setting up a web server in EC2 - Working code
+- name: Exercise to setup webserve ron EC2
+  hosts: all
+  user: ubuntu
+  become: true
+  become_method: sudo
+  become_user: root
+  roles:
+   - setup

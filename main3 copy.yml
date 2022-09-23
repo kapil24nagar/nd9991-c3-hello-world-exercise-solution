@@ -1,11 +1,7 @@
 ---
 # Remote Control Using Ansible
 - name: Remote Control Using Ansible, Hello world webpage
-  hosts: ubuntu
-  user: ubuntu
-  become: true
-  become_method: sudo
-  become_user: root
+  hosts: localhost
   roles:
    - prepare
    - apache
