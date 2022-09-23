@@ -86,41 +86,41 @@ jobs:
 
 
   # # # * Exercise: Config and Deployment
-  configure_infrastructure: 
-    docker:
-      - image: python:3.7-alpine3.11
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints: ["bc:ce:9e:94:f6:5a:fe:77:c5:1a:e0:3c:6b:74:61:be"] # # * You can get this ID in the section where you registered the SSH Key
-      - run:
-          name: Install Ansible
-          command: |
-            # # * install the dependencies needed for your playbook
-            apk add --update ansible 
-      - run:
-          name: Run Playbook and Configure server
-          command: |
-            ansible-playbook -i inventory.txt main-remote.yml
+  # configure_infrastructure: 
+  #   docker:
+  #     - image: python:3.7-alpine3.11
+  #   steps:
+  #     - checkout
+  #     - add_ssh_keys:
+  #         fingerprints: ["bc:ce:9e:94:f6:5a:fe:77:c5:1a:e0:3c:6b:74:61:be"] # # * You can get this ID in the section where you registered the SSH Key
+  #     - run:
+  #         name: Install Ansible
+  #         command: |
+  #           # # * install the dependencies needed for your playbook
+  #           apk add --update ansible 
+  #     - run:
+  #         name: Run Playbook and Configure server
+  #         command: |
+  #           ansible-playbook -i inventory.txt main-remote.yml
 
   # # # * Exercise: Smoke Testing
-  # smoke_test:
-  #   docker:
-  #     - image: alpine:latest
-  #   steps:
-  #     - run: apk add --update curl
-  #     - run:
-  #         name: smoke test
-  #         command: |
-  #           URL="https://blog.udacity.com/"
-  #           # # * Test if website exists
-  #           if curl -s --head ${URL} 
-  #           then
-  #             return 0
-  #           else
-  #             return 1
-  #           fi
-  #     - destroy_environment      
+  smoke_test:
+    docker:
+      - image: alpine:latest
+    steps:
+      - run: apk add --update curl
+      - run:
+          name: smoke test
+          command: |
+            URL="http://54.225.39.251:3000/"
+            # # * Test if website exists
+            if curl -s --head ${URL} 
+            then
+              return 0
+            else
+              return 1
+            fi
+      # - destroy_environment      
   
   # # # * Exercise: Promote to Production - Job 1 
   # # # * Prerequisite: 
@@ -223,7 +223,8 @@ workflows:
       # # *    requires:
       # # *      - upload_file
       # - create_infrastructure
-      - configure_infrastructure
+      # - configure_infrastructure
+      - smoke_test
       # - create_and_deploy_front_end
       # - promote_to_production:
       #     requires: 
