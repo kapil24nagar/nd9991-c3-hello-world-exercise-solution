@@ -225,7 +225,7 @@ workflows:
       # - create_infrastructure
       # - configure_infrastructure
       # - smoke_test
-      # - create_and_deploy_front_end
+      - create_and_deploy_front_end
       - promote_to_production:
           requires: 
             - create_and_deploy_front_end
