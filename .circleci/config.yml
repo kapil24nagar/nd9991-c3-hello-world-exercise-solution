@@ -67,18 +67,18 @@ jobs:
  
   # # # * Exercise: Infrastructure Creation
   # # # * Exercise - Rollback
-  create_infrastructure: 
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run:
-          name: Create Cloudformation Stack
-          command: |
-            aws cloudformation deploy \
-              --template-file template.yml \
-              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
-              --region us-east-1
+  # create_infrastructure: 
+  #   docker:
+  #     - image: amazon/aws-cli
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: Create Cloudformation Stack
+  #         command: |
+  #           aws cloudformation deploy \
+  #             --template-file template.yml \
+  #             --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
+  #             --region us-east-1
   #     # # * Fail the job intentionally to simulate an error.
   #     # # * Uncomment the line below if you want to fail the current step
   #     # #  - run: return 1
@@ -86,22 +86,22 @@ jobs:
 
 
   # # # * Exercise: Config and Deployment
-  # configure_infrastructure: 
-  #   docker:
-  #     - image: python:3.7-alpine3.11
-  #   steps:
-  #     - checkout
-  #     - add_ssh_keys:
-  #         fingerprints: ["0c:55:f7:d7:ad:e3:73:19:0b:e6:c6:46:5c:04:76:94"] # # * You can get this ID in the section where you registered the SSH Key
-  #     - run:
-  #         name: Install Ansible
-  #         command: |
-  #           # # * install the dependencies needed for your playbook
-  #           apk add --update ansible 
-  #     - run:
-  #         name: Run Playbook and Configure server
-  #         command: |
-  #           ansible-playbook -i inventory.txt main4.yml
+  configure_infrastructure: 
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["bc:ce:9e:94:f6:5a:fe:77:c5:1a:e0:3c:6b:74:61:be"] # # * You can get this ID in the section where you registered the SSH Key
+      - run:
+          name: Install Ansible
+          command: |
+            # # * install the dependencies needed for your playbook
+            apk add --update ansible 
+      - run:
+          name: Run Playbook and Configure server
+          command: |
+            ansible-playbook -i inventory.txt main-remote.yml
 
   # # # * Exercise: Smoke Testing
   # smoke_test:
@@ -222,8 +222,8 @@ workflows:
       # # *- download_file:
       # # *    requires:
       # # *      - upload_file
-      - create_infrastructure
-      # # *- configure_infrastructure
+      # - create_infrastructure
+      - configure_infrastructure
       # - create_and_deploy_front_end
       # - promote_to_production:
       #     requires: 
